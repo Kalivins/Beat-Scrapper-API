@@ -1,0 +1,15 @@
+{
+  "name"             : "friendsaber/scoresaber-parser",
+  "description"      : "Extract data from scoresaber",
+  "license" : "MIT",
+  "require": {
+    "fabpot/goutte": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "ScoreSaberApi\\": "src/",
+      "ScoreSaberApi\\Test\\": "test/"
+    }
+  },
+  "require-dev": {}
+}
