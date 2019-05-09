@@ -53,10 +53,14 @@ class SearchHandler extends BaseHandler {
      * @param mapper
      * @return string $downloadlink
      */
-    public static function getSongDownload($title, $mapper) {
+    public static function getSongDownload($title, $mapper, $try = 0) {
 
         $html = '';
-        $key = substr(trim(strtolower($title)), 0, strlen($title) - 5).' '.trim(strtolower($mapper));
+        if($try == 1) {
+            $title = explode('-', $title);
+            $title = reset($title);
+        }
+        $key = preg_replace("/[^a-zA-Z ]/", '', trim(strtolower($title))).' '.trim(strtolower($mapper));
         $params = array('key' => $key);
         $queryString =  http_build_query($params);
         $client = new Client();
@@ -68,6 +72,8 @@ class SearchHandler extends BaseHandler {
         }
         $doc = SearchHandler::getDoc($html);
         $downloadlink = !empty($doc->xpath(".//a[contains(@href, 'https://beatsaver.com/browse/detail/')]")) ? (string)$doc->xpath(".//a[contains(@href, 'https://beatsaver.com/browse/detail/')]")[0]->attributes()->href : '';
+        if(empty($downloadlink) && $try < 1)
+            return self::getSongDownload($title, $mapper, 1);
         return $downloadlink;
 
     }
