@@ -56,7 +56,8 @@ class SearchHandler extends BaseHandler {
     public static function getSongDownload($title, $mapper) {
 
         $html = '';
-        $params = array('key' => trim(strtolower($title)).' '.trim(strtolower($mapper)));
+        $key = substr(trim(strtolower($title)), 0, strlen($title) - 5).' '.trim(strtolower($mapper));
+        $params = array('key' => $key);
         $queryString =  http_build_query($params);
         $client = new Client();
         $crawler = $client->request('GET', 'https://beatsaver.com/search/all/?'.$queryString);
@@ -79,11 +80,15 @@ class SearchHandler extends BaseHandler {
         return $path;
     }
 
-    public function getLastRankedSongs() {
-        
+    public function getLastSongs($type, $page = 1) {
+
+        $cat = $this->getType($type);
+        $url = 'https://scoresaber.com/imports/user-setting.php?verified=0&ranked=1&sort=desc&star=20&star1=0';
+        if(!empty($cat))
+            $url.= '&cat='.$cat;
         $params = array(
-            'url_import' => 'https://scoresaber.com/imports/user-setting.php?verified=0&ranked=1&sort=desc&cat=1&star=20&star1=0',
-            'page' => 1,
+            'url_import' => $url,
+            'page' => $page,
             'url' => 'https://scoresaber.com'
         );
         $songs = $this->getSongsFromDoc($params);

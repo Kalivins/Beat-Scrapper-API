@@ -40,12 +40,10 @@ class ProfileHandler extends BaseHandler {
 		$doc = $this->getHTMLDom('/global?search=' . $name .'');
 		$idPath = new \DOMXPath($doc);
 		$nodes = $idPath->query('/html/body/div/div/div/div/div[2]/div/div/table/tbody/tr/td[contains(@class, "player")]/a');
-		foreach($nodes as $key => $node) {
-			if($key == 0) {
-				$id = explode('/', $node->getAttribute('href'));
-				$id = end($id);
-			}
-		}
+		if($nodes->length == 0)
+			return;
+		$id = explode('/', $nodes[0]->getAttribute('href'));
+		$id = end($id);
 		return $id;
 	}
 
@@ -124,24 +122,9 @@ class ProfileHandler extends BaseHandler {
 		$descriptions = $x_path->query('/html/head/meta[@property="og:description"]/@content');
 		$avatar = $x_path->query('/html/body/div/div/div/div[1]/div/div[1]/img');
 		$name = $x_path->query('/html/body/div/div/div/div[1]/div/div[2]/h5/a');
-		foreach($descriptions as $key => $node) {
-			if($key == 0) {
-				$content['resume'] = $node->value;
-			}
-		}
-
-		foreach($avatar as $key => $node) {
-			if($key == 0) {
-				$content['avatar'] = $node->getAttribute('src');
-			}
-		}
-
-		foreach($name as $key => $node) {
-			if($key == 0) {
-				$content['name'] = trim($node->nodeValue);
-			}
-		}
-
+		$content['resume'] = $descriptions[0]->value;
+		$content['avatar'] = $avatar[0]->getAttribute('src');
+		$content['name'] = trim($name[0]->nodeValue);
 		$content['url'] = 'https://scoresaber.com/u/' . $id;
 		$content['id'] = $id;
 

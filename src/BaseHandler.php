@@ -33,6 +33,63 @@ class BaseHandler {
 		return file_get_contents($this->baseUrl . '/' . $page);
 	}
 
+	public function formatScores($scores, $number = 10) {
+		$array = [];
+
+		foreach($scores as $key => $score) {
+			if($key <= $number) {
+				$array[$key]['name'] = $score->getSong()->getName();
+				$array[$key]['difficulty'] = $score->getSong()->getDifficulty();
+				$array[$key]['image'] = $score->getSong()->getImage();
+				$array[$key]['mapper']['name'] = $score->getSong()->getMapper();
+				$array[$key]['mapper']['url'] = $score->getSong()->getMapperUrl();
+				$array[$key]['download'] = $score->getSong()->getDownloadUrl();
+				$array[$key]['score'] = $score->getPp() . 'pp ' . $score->getAccuracy();
+				$array[$key]['rank'] = $score->getRank();
+			}
+		}
+
+		return $array;
+	} 
+
+	public function formatSongs($songs, $number = 10) {
+		$array = [];
+		
+		foreach($songs as $key => $song) {
+            if($key <= $number) {
+                $array[$key]['name'] = $song->getName();
+                $array[$key]['difficulty'] = $song->getDifficulty();
+                $array[$key]['image'] = $song->getImage();
+                $array[$key]['mapper']['name'] = $song->getMapper();
+                $array[$key]['mapper']['url'] = $song->getMapperUrl();
+                $array[$key]['download'] = $song->getDownloadUrl();
+            }
+		}
+		
+		return $array;
+	}
+
+	public function getType($type) {
+		switch(strtolower($type)) {
+			case 'trending':
+				return 0;
+			case 'ranked':
+				return 1;
+			case 'scoresset':
+				return 2;
+			case 'stardifficulty':
+				return 3;
+			case 'mapper':
+				return 4;
+			default:
+				return;
+		}
+	}
+
+	public function getAllTypes() {
+		return array('trending', 'ranked', 'scoresset', 'stardifficulty', 'mapper');
+	}
+
 	protected function getHTML(string $page): \SimpleXMLElement {
 		libxml_use_internal_errors(true);
 		$html = new \DOMDocument();
