@@ -31,7 +31,7 @@ class ProfileHandler extends BaseHandler {
 		return $this->getHTML('/u/' . $id);
 	}
 
-	private function getGeneralProfilePage(string $id): \DOMDocument {
+	private function getGeneralProfilePage($id): \DOMDocument {
 		return $this->getHTMLDom('/u/' . $id . '');
 	}
 
@@ -132,7 +132,7 @@ class ProfileHandler extends BaseHandler {
 	}
 
 	/**
-	 * @param string $id
+	 * @param $id
 	 * @return json
 	 */
 	public function getGeneralProfile($name, $checkImport = false) {
