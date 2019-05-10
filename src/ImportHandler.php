@@ -64,8 +64,10 @@ class ImportHandler extends BaseHandler {
             while (false !== ($entry = readdir($handle))) {
         
                 if (!empty($entry) && $entry != "." && $entry != "..") {
-        
-                    $userid[] = reset(explode('.', $entry));
+                    
+                    $id = explode('.', $entry);
+                    $id = reset($id);
+                    $userid[] = intval($id);
 
                 }
             }
