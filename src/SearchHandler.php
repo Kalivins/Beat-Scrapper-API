@@ -80,7 +80,7 @@ class SearchHandler extends BaseHandler {
             $image = 'https://scoresaber.com'.(string)$row->xpath(".//img[contains(@src, 'imports/images')]")[0]->attributes()->src;
 			$id = (int)substr((string)$row->xpath(".//a[contains(@href, '/leaderboard/')]")[0]->attributes()->href, 13);
             $title = trim((string)$row->xpath(".//a[contains(@href, '/leaderboard/')]")[0]);
-            $mapper = (string)$row->xpath(".//a[contains(@href, '?search')]")[0];
+            $mapper = trim((string)$row->xpath(".//a[contains(@href, '?search')]")[0]);
             $linkMapper = 'https://scoresaber.com/'.(string)$row->xpath(".//a[contains(@href, '?search')]")[0]->attributes()->href;
             $linkDownload = $this->getSongDownload($title, $mapper);
             $difficulty = (string)$row->xpath("./td[contains(@class, 'difficulty')]/span")[0];
@@ -137,9 +137,9 @@ class SearchHandler extends BaseHandler {
                 $fileCat = reset($fileCat);
                 if($cat == 'trending')
                     $cat = "0";
-        
+                
                 if ($fileCat == $cat) {
-					
+                    
                     return true;
 
                 }
@@ -155,15 +155,15 @@ class SearchHandler extends BaseHandler {
         if($cat == 'trending')
             $cat = "0";
 
-        $userData = file_get_contents('imports/'.$id.'.json');
+        $userData = file_get_contents('imports/'.$cat.'.json');
         return json_decode($userData, true);
     }
 
     public function getLastSongs($type, $checkImport = false, $page = 1) {
         
         $cat = is_int($type) ? $type : $this->getType($type);
-        if(!empty($cat) && $checkImport && $this->checkLastSongs($cat)) {
-            $data = $this->getLastSongsImport($cat);
+        if(!empty($type) && $checkImport && $this->checkLastSongs($type)) {
+            $data = $this->getLastSongsImport($type);
             $data['import'] = true;
             return $data;
         }

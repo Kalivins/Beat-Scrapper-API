@@ -53,7 +53,8 @@ $router->map( 'GET', '/songs/[a:action]', function( $action ) {
     if(!empty($songs['import'])) {
         header('Content-Type: application/json');
         unset($songs['import']);
-        echo json_encode($songs);
+        $result[$action.'_maps'] = $songs;
+        echo json_encode($result);
         die();
     }
     $maps = $searcher->formatSongs($songs);

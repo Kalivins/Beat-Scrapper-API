@@ -61,7 +61,7 @@ class ProfileHandler extends BaseHandler {
 			$image = 'https://scoresaber.com/'.(string)$row->xpath(".//img[contains(@src, 'imports/images')]")[0]->attributes()->src;
 			$id = (int)substr((string)$row->xpath(".//a[contains(@href, '/leaderboard/')]")[0]->attributes()->href, 13);
 			$title = trim((string)$row->xpath(".//span[contains(@class, 'songTop pp')]")[0]);
-			$mapper = (string)$row->xpath(".//span[contains(@class, 'songTop mapper')]")[0];
+			$mapper = trim((string)$row->xpath(".//span[contains(@class, 'songTop mapper')]")[0]);
 			$difficulty = (string)$row->xpath(".//span[contains(@class, 'songTop pp')]")[0]->children()[0];
 			$time = new \DateTime((string)$row->xpath(".//span[contains(@class, 'time')]")[0]->attributes()->title);
 			$accuracy = (string)$row->xpath(".//span[contains(@class, 'scoreBottom')]")[0];
