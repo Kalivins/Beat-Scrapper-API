@@ -7,8 +7,8 @@
   },
   "autoload": {
     "psr-4": {
-      "ScoreSaberApi\\": "src/",
-      "ScoreSaberApi\\Test\\": "test/"
+      "BeatSaberScrapperApi\\": "src/",
+      "BeatSaberScrapperApi\\Test\\": "test/"
     }
   },
   "require-dev": {}

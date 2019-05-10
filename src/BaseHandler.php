@@ -19,7 +19,7 @@
  *
  */
 
-namespace ScoreSaberApi;
+namespace BeatSaberScrapperApi;
 
 class BaseHandler {
 	private $baseUrl;
@@ -70,7 +70,8 @@ class BaseHandler {
 	}
 
 	public function getType($type) {
-		switch(strtolower($type)) {
+		$type = is_int($type) || $type == 0 ? $type : strtolower($type);
+		switch($type) {
 			case 'trending':
 				return 0;
 			case 'ranked':
@@ -81,6 +82,16 @@ class BaseHandler {
 				return 3;
 			case 'mapper':
 				return 4;
+			case 0:
+				return 'trending';
+			case 1:
+				return 'ranked';
+			case 2:
+				return 'scoresset';
+			case 3:
+				return 'stardifficulty';
+			case 4:
+				return 'mapper';
 			default:
 				return;
 		}
@@ -88,6 +99,10 @@ class BaseHandler {
 
 	public function getAllTypes() {
 		return array('trending', 'ranked', 'scoresset', 'stardifficulty', 'mapper');
+	}
+
+	public function getAuthorizedParams() {
+		return array('verified', 'ranked', 'category', 'sort', 'maxstars', 'minstars');
 	}
 
 	protected function getHTML(string $page): \SimpleXMLElement {

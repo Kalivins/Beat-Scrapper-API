@@ -6,3 +6,4 @@ require 'src/Song.php';
 require 'src/Score.php';
 require 'src/ProfileHandler.php';
 require 'src/SearchHandler.php';
+require 'src/ImportHandler.php';

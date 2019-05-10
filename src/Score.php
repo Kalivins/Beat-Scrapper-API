@@ -19,7 +19,7 @@
  *
  */
 
-namespace ScoreSaberApi;
+namespace BeatSaberScrapperApi;
 
 class Score {
 	private $song;

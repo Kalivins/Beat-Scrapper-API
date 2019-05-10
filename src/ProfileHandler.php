@@ -19,7 +19,7 @@
  *
  */
 
-namespace ScoreSaberApi;
+namespace BeatSaberScrapperApi;
 
 
 class ProfileHandler extends BaseHandler {
@@ -60,7 +60,7 @@ class ProfileHandler extends BaseHandler {
 			$rank = (int)substr(trim((string)$row->xpath("./th[contains(@class, 'rank')]")[0]), 1);
 			$image = 'https://scoresaber.com/'.(string)$row->xpath(".//img[contains(@src, 'imports/images')]")[0]->attributes()->src;
 			$id = (int)substr((string)$row->xpath(".//a[contains(@href, '/leaderboard/')]")[0]->attributes()->href, 13);
-			$title = (string)$row->xpath(".//span[contains(@class, 'songTop pp')]")[0];
+			$title = trim((string)$row->xpath(".//span[contains(@class, 'songTop pp')]")[0]);
 			$mapper = (string)$row->xpath(".//span[contains(@class, 'songTop mapper')]")[0];
 			$difficulty = (string)$row->xpath(".//span[contains(@class, 'songTop pp')]")[0]->children()[0];
 			$time = new \DateTime((string)$row->xpath(".//span[contains(@class, 'time')]")[0]->attributes()->title);
@@ -105,15 +105,45 @@ class ProfileHandler extends BaseHandler {
 		}
 	}
 
+	public function checkUser($id) {
+		if ($handle = opendir('imports/users/')) {
+
+            while (false !== ($entry = readdir($handle))) {
+
+				$fileId = explode('.', $entry);
+				$fileId = reset($fileId);
+        
+                if ($fileId == $id) {
+					
+                    return true;
+
+                }
+            }
+        
+            closedir($handle);
+		}
+		
+		return false;
+	}
+
+	public function getUserData($id) {
+		$userData = file_get_contents('imports/users/'.$id.'.json');
+		return json_decode($userData, true);
+	}
 
 	/**
 	 * @param string $id
 	 * @return json
 	 */
-	public function getGeneralProfile(string $name) {
+	public function getGeneralProfile($name, $checkImport = false) {
 		$content = array();
-		$id = $this->getUserID($name);
+		$id = is_int($name) ? $name : $this->getUserID($name);
 		if(!empty($id)) {
+			if($checkImport && $this->checkUser($id)) {
+				$data = $this->getUserData($id);
+				$data['import'] = true;
+				return $data; 
+			}
 			$doc = $this->getGeneralProfilePage($id);
 		} else {
 			return array('error' => 'Unable to get user ID');
